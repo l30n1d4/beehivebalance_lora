@@ -10,27 +10,27 @@
 #define TIME_TO_SLEEP        600 // Time ESP32 will go to sleep (in seconds)
 #define ONE_WIRE_BUS          20 // GPIO where the DS18B20 is connected to
 
-#define BUTTON_TARE_PIN        1 // GPIO where is connected the button for tare scale number 1 on boot
-#define SCALEWAIT            500 // Waiting time for scale power up
+#define BUTTON_TARE_PIN        1 // GPIO where is connected the button for tare scale on boot
+#define SCALEWAIT            500 // milliseconds. Waiting time for scale power up
 #define HX711_scale0_DOUT_PIN 48 // HX711 scale0 circuit wiring DOUT
 #define HX711_scale0_SCK_PIN  47 // HX711 scale0 circuit wiring SCK
-#define HX711_scale1_DOUT_PIN  5 // HX711 scale1 circuit wiring DOUT
-#define HX711_scale1_SCK_PIN   6 // HX711 scale1 circuit wiring SCK
-#define HX711_scale2_DOUT_PIN  7 // HX711 scale2 circuit wiring DOUT
-#define HX711_scale2_SCK_PIN  26 // HX711 scale2 circuit wiring SCK
-#define HX711_scale3_DOUT_PIN 46 // HX711 scale3 circuit wiring DOUT
-#define HX711_scale3_SCK_PIN  45 // HX711 scale3 circuit wiring SCK
+#define HX711_scale1_DOUT_PIN 48 // HX711 scale1 circuit wiring DOUT
+#define HX711_scale1_SCK_PIN  47 // HX711 scale1 circuit wiring SCK
+#define HX711_scale2_DOUT_PIN 48 // HX711 scale2 circuit wiring DOUT
+#define HX711_scale2_SCK_PIN  47 // HX711 scale2 circuit wiring SCK
+#define HX711_scale3_DOUT_PIN 48 // HX711 scale3 circuit wiring DOUT
+#define HX711_scale3_SCK_PIN  47 // HX711 scale3 circuit wiring SCK
 #define HX711_scale4_DOUT_PIN 48 // HX711 scale4 circuit wiring DOUT
 #define HX711_scale4_SCK_PIN  47 // HX711 scale4 circuit wiring SCK
-#define HX711_scale5_DOUT_PIN  5 // HX711 scale5 circuit wiring DOUT
-#define HX711_scale5_SCK_PIN   6 // HX711 scale5 circuit wiring SCK
-#define HX711_scale6_DOUT_PIN  7 // HX711 scale6 circuit wiring DOUT
-#define HX711_scale6_SCK_PIN  26 // HX711 scale6 circuit wiring SCK
-#define HX711_scale7_DOUT_PIN 46 // HX711 scale7 circuit wiring DOUT
-#define HX711_scale7_SCK_PIN  45 // HX711 scale7 circuit wiring SCK
+#define HX711_scale5_DOUT_PIN 48 // HX711 scale5 circuit wiring DOUT
+#define HX711_scale5_SCK_PIN  47 // HX711 scale5 circuit wiring SCK
+#define HX711_scale6_DOUT_PIN 48 // HX711 scale6 circuit wiring DOUT
+#define HX711_scale6_SCK_PIN  47 // HX711 scale6 circuit wiring SCK
+#define HX711_scale7_DOUT_PIN 48 // HX711 scale7 circuit wiring DOUT
+#define HX711_scale7_SCK_PIN  47 // HX711 scale7 circuit wiring SCK
 
-#define FREQUENCY            866.3 // for Europe. Frequency in MHz. Keep the decimal point to designate float.
-#define BANDWIDTH            125.0 // Allowed values are 7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125.0, 250.0 and 500.0 kHz.
+#define FREQUENCY          866.3 // for Europe. Frequency in MHz. Keep the decimal point to designate float.
+#define BANDWIDTH          125.0 // Allowed values are 7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125.0, 250.0 and 500.0 kHz.
 #define SPREADING_FACTOR      10 // Number from 5 to 12. Higher means slower but higher "processor gain", meaning (in nutshell) longer range and more robust against interference.
 #define TRANSMIT_POWER         0 // Transmit power in dBm. 0 dBm = 1 mW. This value set between -9 dBm (0.125 mW) to 22 dBm (158 mW). 
 
@@ -42,7 +42,7 @@ Preferences preferences;
 const int knownWeight = 650; //grams
 RTC_DATA_ATTR int bootCount = 0;
 
-float readTemperature(int index) {
+float readTemperature(int index) { // Function to read DS18B20 device temperature with index
   float tempC = sensors.getTempCByIndex(index);
   if(tempC == DEVICE_DISCONNECTED_C) { // Check if reading was successful
     Serial.print("Error: Could not read temperature data for index ["); Serial.print(index); Serial.println("]");
@@ -58,7 +58,7 @@ float readTemperature(int index) {
   return tempC;
 }
 
-float readTemperature(DeviceAddress deviceAddress) {
+float readTemperature(DeviceAddress deviceAddress) { // Function to read DS18B20 device temperature with deviceAddress
   float tempC = sensors.getTempC(deviceAddress);
   if(tempC == DEVICE_DISCONNECTED_C) { // Check if reading was successful
     Serial.print("Error: Could not read temperature data for address ["); printAddress(deviceAddress); Serial.println("]");
@@ -73,7 +73,7 @@ void printAddress(DeviceAddress deviceAddress) { // Function to print a device a
   }
 }
 
-float getCalFactor(int num) {
+float getCalFactor(int num) { // Function to read calibration factor from memory with index
   char buf[11];
   const char* lblCalFactor = "calFactor";
   strcpy(buf, lblCalFactor);
@@ -88,7 +88,7 @@ float getCalFactor(int num) {
   return calFactor;
 }
 
-float getScaleOffset(int num) {
+float getScaleOffset(int num) { // Function to read scale offset from memory with index
   char buf[13];
   const char* lblScaleOffset = "scaleOffset";
   strcpy(buf, lblScaleOffset);
@@ -102,7 +102,7 @@ float getScaleOffset(int num) {
   return scaleOffset;
 }
 
-void setCalFactor(int num, float calFactor) {
+void setCalFactor(int num, float calFactor) { // Function to write calibration factor with index in memory
   char buf[11];
   const char* lblCalFactor = "calFactor";
   strcpy(buf, lblCalFactor);
@@ -114,7 +114,7 @@ void setCalFactor(int num, float calFactor) {
   preferences.end();
 }
 
-void setScaleOffset(int num, float scaleOffset) {
+void setScaleOffset(int num, float scaleOffset) { // Function to write scale offset with index in memory
   char buf[13];
   const char* lblScaleOffset = "scaleOffset";
   strcpy(buf, lblScaleOffset);
@@ -126,7 +126,7 @@ void setScaleOffset(int num, float scaleOffset) {
   preferences.end();
 }
 
-float readWeight(int num) {
+float readWeight(int num) { // Function to read weight with index
   scale[num].power_up();
   float weight;
   float calFactor = getCalFactor(num);
@@ -141,7 +141,7 @@ float readWeight(int num) {
   return weight;
 }
 
-void calibratingScale(int num) { //https://randomnerdtutorials.com/esp32-load-cell-hx711/
+void calibratingScale(int num) { // Function to tare scale and set calibration factor and scale offset with index
   Serial.println("Starting calibrate scale...");
   scale[num].power_up();
   heltec_delay(SCALEWAIT);
@@ -169,7 +169,100 @@ void calibratingScale(int num) { //https://randomnerdtutorials.com/esp32-load-ce
   }
 }
 
-void initLoRa() {
+String getStrJson1() { // Function to create json string of first four scale
+  StaticJsonDocument<300> jsondoc;
+  jsondoc["station"] = BOARD_ID;
+
+  JsonObject stats = jsondoc.createNestedObject("stats");
+  JsonArray reads = jsondoc.createNestedArray("reads");
+
+  StaticJsonDocument<50> jsonDocHive0;
+  jsonDocHive0["hive"] = 0;
+  jsonDocHive0["temp"] = readTemperature(0); // (uint8_t*)"A8F873C6AB21BA2A"
+  jsonDocHive0["weight"] = readWeight(0);
+  reads.add(jsonDocHive0);
+
+  StaticJsonDocument<50> jsonDocHive1;
+  jsonDocHive1["hive"] = 1;
+  jsonDocHive1["temp"] = readTemperature(1);
+  jsonDocHive1["weight"] = readWeight(1);
+  reads.add(jsonDocHive1);
+
+  StaticJsonDocument<50> jsonDocHive2;
+  jsonDocHive2["hive"] = 2;
+  jsonDocHive2["temp"] = readTemperature(2);
+  jsonDocHive2["weight"] = readWeight(2);
+  reads.add(jsonDocHive2);
+
+  StaticJsonDocument<50> jsonDocHive3;
+  jsonDocHive3["hive"] = 3;
+  jsonDocHive3["temp"] = readTemperature(3);
+  jsonDocHive3["weight"] = readWeight(3);
+  reads.add(jsonDocHive3);
+
+  stats["read"] = bootCount;
+  stats["temp"] = heltec_temperature();
+  stats["batt"] = heltec_battery_percent();
+
+  String jsonString;
+  serializeJson(jsondoc, jsonString);
+  jsondoc.clear();
+  return jsonString;
+}
+
+String getStrJson2() { // Function to create json string of last four scale
+  StaticJsonDocument<300> jsondoc;
+  jsondoc["station"] = BOARD_ID;
+
+  JsonObject stats = jsondoc.createNestedObject("stats");
+  JsonArray reads = jsondoc.createNestedArray("reads");
+
+  StaticJsonDocument<50> jsonDocHive4;
+  jsonDocHive4["hive"] = 4;
+  jsonDocHive4["temp"] = readTemperature(4);
+  jsonDocHive4["weight"] = readWeight(4);
+  reads.add(jsonDocHive4);
+
+  StaticJsonDocument<50> jsonDocHive5;
+  jsonDocHive5["hive"] = 5;
+  jsonDocHive5["temp"] = readTemperature(5);
+  jsonDocHive5["weight"] = readWeight(5);
+  reads.add(jsonDocHive5);
+
+  StaticJsonDocument<50> jsonDocHive6;
+  jsonDocHive6["hive"] = 6;
+  jsonDocHive6["temp"] = readTemperature(6);
+  jsonDocHive6["weight"] = readWeight(6);
+  reads.add(jsonDocHive6);
+
+  StaticJsonDocument<50> jsonDocHive7;
+  jsonDocHive7["hive"] = 7;
+  jsonDocHive7["temp"] = readTemperature(7);
+  jsonDocHive7["weight"] = readWeight(7);
+  reads.add(jsonDocHive7);
+
+  stats["read"] = bootCount;
+  stats["temp"] = heltec_temperature();
+  stats["batt"] = heltec_battery_percent();
+
+  String jsonString;
+  serializeJson(jsondoc, jsonString);
+  jsondoc.clear();
+  return jsonString;
+}
+
+void initScale() { // Function to init scale array
+  scale[0].begin(HX711_scale0_DOUT_PIN, HX711_scale0_SCK_PIN); // Initialize HX711 for scale0
+  scale[1].begin(HX711_scale1_DOUT_PIN, HX711_scale1_SCK_PIN); // Initialize HX711 for scale1
+  scale[2].begin(HX711_scale2_DOUT_PIN, HX711_scale2_SCK_PIN); // Initialize HX711 for scale2
+  scale[3].begin(HX711_scale3_DOUT_PIN, HX711_scale3_SCK_PIN); // Initialize HX711 for scale3
+  scale[4].begin(HX711_scale4_DOUT_PIN, HX711_scale4_SCK_PIN); // Initialize HX711 for scale4
+  scale[5].begin(HX711_scale5_DOUT_PIN, HX711_scale5_SCK_PIN); // Initialize HX711 for scale5
+  scale[6].begin(HX711_scale6_DOUT_PIN, HX711_scale6_SCK_PIN); // Initialize HX711 for scale6
+  scale[7].begin(HX711_scale7_DOUT_PIN, HX711_scale7_SCK_PIN); // Initialize HX711 for scale7
+}
+
+void initLoRa() { // Function to init LoRa radio
   radio.begin();
   radio.setFrequency(FREQUENCY);
   radio.setBandwidth(BANDWIDTH);
@@ -177,7 +270,7 @@ void initLoRa() {
   radio.setOutputPower(TRANSMIT_POWER);
 }
 
-void sendLoRa(String message) {
+void sendLoRa(String message) { // Function to send message with LoRa radio
   Serial.printf("TX [%s] ", message.c_str());
   //heltec_led(50); // 50% brightness is plenty for this LED
   uint64_t tx_time = millis();
@@ -204,107 +297,28 @@ void setup() {
   rtc_clk_cpu_freq_to_config(RTC_CPU_FREQ_80M, &config);
   rtc_clk_cpu_freq_set_config_fast(&config);
 */
-  scale[0].begin(HX711_scale0_DOUT_PIN, HX711_scale0_SCK_PIN); // Initialize HX711
-  scale[1].begin(HX711_scale1_DOUT_PIN, HX711_scale1_SCK_PIN); // Initialize HX711
-  scale[2].begin(HX711_scale2_DOUT_PIN, HX711_scale2_SCK_PIN); // Initialize HX711
-  scale[3].begin(HX711_scale3_DOUT_PIN, HX711_scale3_SCK_PIN); // Initialize HX711
-  scale[4].begin(HX711_scale4_DOUT_PIN, HX711_scale4_SCK_PIN); // Initialize HX711
-  scale[5].begin(HX711_scale5_DOUT_PIN, HX711_scale5_SCK_PIN); // Initialize HX711
-  scale[6].begin(HX711_scale6_DOUT_PIN, HX711_scale6_SCK_PIN); // Initialize HX711
-  scale[7].begin(HX711_scale7_DOUT_PIN, HX711_scale7_SCK_PIN); // Initialize HX711
+  initScale();
   sensors.begin(); // Start the DS18B20 sensor
   sensors.requestTemperatures(); // Request to read DS18B20 sensor
   pinMode(BUTTON_TARE_PIN, INPUT_PULLUP);
 
   if(digitalRead(BUTTON_TARE_PIN) == LOW) {
-    calibratingScale(0);
+    for (int i = 0; i <= 7; i++) {
+      calibratingScale(i);
+      heltec_delay(1000);
+    }
   }
 
   if (++bootCount > 1000) {
     ESP.restart();
   }
 
-  int battery = heltec_battery_percent();
-  heltec_temperature(); // The first read is wrong
-  float temperature = heltec_temperature();
-
-  StaticJsonDocument<400> jsondoc;
-  jsondoc["station"] = BOARD_ID;
-
-  JsonObject stats = jsondoc.createNestedObject("stats");
-  stats["read"] = bootCount;
-  stats["batt"] = battery;
-  stats["temp"] = temperature;
-
-  JsonArray reads = jsondoc.createNestedArray("reads");
-
-  StaticJsonDocument<50> jsonDocHive0;
-  jsonDocHive0["hive"] = 0;
-  jsonDocHive0["temp"] = readTemperature(0);
-  jsonDocHive0["weight"] = readWeight(0);
-  reads.add(jsonDocHive0);
-
-  StaticJsonDocument<50> jsonDocHive1;
-  jsonDocHive1["hive"] = 1;
-  jsonDocHive1["temp"] = readTemperature(1);
-  jsonDocHive1["weight"] = readWeight(1);
-  reads.add(jsonDocHive1);
-
-  StaticJsonDocument<50> jsonDocHive2;
-  jsonDocHive2["hive"] = 2;
-  jsonDocHive2["temp"] = readTemperature(2);
-  jsonDocHive2["weight"] = readWeight(2);
-  reads.add(jsonDocHive2);
-
-  StaticJsonDocument<50> jsonDocHive3;
-  jsonDocHive3["hive"] = 3;
-  jsonDocHive3["temp"] = readTemperature(3);
-  jsonDocHive3["weight"] = readWeight(3);
-  reads.add(jsonDocHive3);
-  
-  String jsonString1;
-  serializeJson(jsondoc, jsonString1);
-
-  jsondoc.clear();
-  jsondoc["station"] = BOARD_ID;
-
-  stats = jsondoc.createNestedObject("stats");
-  stats["read"] = bootCount;
-  stats["batt"] = battery;
-  stats["temp"] = temperature;
-
-  reads = jsondoc.createNestedArray("reads");
-
-  StaticJsonDocument<50> jsonDocHive4;
-  jsonDocHive4["hive"] = 4;
-  jsonDocHive4["temp"] = readTemperature(4);
-  jsonDocHive4["weight"] = readWeight(4);
-  reads.add(jsonDocHive4);
-
-  StaticJsonDocument<50> jsonDocHive5;
-  jsonDocHive5["hive"] = 5;
-  jsonDocHive5["temp"] = readTemperature(5);
-  jsonDocHive5["weight"] = readWeight(5);
-  reads.add(jsonDocHive5);
-
-  StaticJsonDocument<50> jsonDocHive6;
-  jsonDocHive6["hive"] = 6;
-  jsonDocHive6["temp"] = readTemperature(6);
-  jsonDocHive6["weight"] = readWeight(6);
-  reads.add(jsonDocHive6);
-
-  StaticJsonDocument<50> jsonDocHive7;
-  jsonDocHive7["hive"] = 7;
-  jsonDocHive7["temp"] = readTemperature(7);
-  jsonDocHive7["weight"] = readWeight(7);
-  reads.add(jsonDocHive7);
-
-  String jsonString2;
-  serializeJson(jsondoc, jsonString2);
+  String jStr1 = getStrJson1();
+  String jStr2 = getStrJson2();
 
   initLoRa();
-  sendLoRa(jsonString1);
-  sendLoRa(jsonString2);
+  sendLoRa(jStr1);
+  sendLoRa(jStr2);
 
   heltec_delay(100);
   heltec_ve(false); // Turn off Ve (external power) +3.3v

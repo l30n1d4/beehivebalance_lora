@@ -3,7 +3,7 @@
 
 ### Library
 - heltec_unofficial.h (https://github.com/ropg/heltec_esp32_lora_v3)
-- ArduinoJson.h (https://arduinojson.org/)
+- ArduinoJson.h (https://arduinojson.org)
 - OneWire.h (https://www.pjrc.com/teensy/td_libs_OneWire.html)
 - DallasTemperature.h (https://github.com/milesburton/Arduino-Temperature-Control-Library)
 - Preferences.h
