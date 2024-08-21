@@ -107,4 +107,9 @@ void loop() {
       prepareRequest();
     }
   }
+  
+  unsigned long currentMillis = millis();
+  if (currentMillis >= 86400000) { // 24 hours
+    ESP.restart();
+  }
 }
